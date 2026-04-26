@@ -1,0 +1,42 @@
+# docker-compose.yml
+
+version: "3.8"
+
+services:
+
+  # ─── Nextcloud (pre-built image, do NOT modify) ───
+  nextcloud:
+    image: kefaslungu/hng-nextcloud
+    container_name: nextcloud
+    restart: unless-stopped
+    volumes:
+      - nextcloud_data:/var/www/html
+      # Nextcloud mounts the log volume read-only (as required)
+      - HNG-nginx-logs:/var/log/nginx:ro
+    networks:
+      - hng-net
+
+  # ─── Nginx reverse proxy ───
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      # Nginx WRITES to this named volume
+      - HNG-nginx-logs:/var/log/nginx
+    depends_on:
+      - nextcloud
+    networks:
+      - hng-net
+
+volumes:
+  nextcloud_data:
+  # Named volume shared between nginx (write) and detector (read)
+  HNG-nginx-logs:
+
+networks:
+  hng-net:
+    driver: bridge

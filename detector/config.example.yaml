@@ -1,0 +1,33 @@
+# detector/config.example.yaml
+#
+# ⚠️  This is the EXAMPLE config. It is safe to commit to GitHub.
+#
+# HOW TO USE:
+#   1. Copy this file:  cp config.example.yaml config.yaml
+#   2. Fill in your real Slack webhook URL in config.yaml
+#   3. Never commit config.yaml — it is in .gitignore
+
+slack:
+  webhook_url: "https://hooks.slack.com/services/REPLACE/WITH/YOUR_WEBHOOK"
+
+log:
+  path: "/var/log/nginx/hng-access.log"
+  audit_path: "/var/log/detector-audit.log"
+
+detection:
+  window_seconds: 60
+  baseline_window_minutes: 30
+  baseline_recalc_interval: 60
+  zscore_threshold: 3.0
+  rate_multiplier: 5.0
+  error_surge_multiplier: 3.0
+  error_surge_tighten_factor: 0.5
+  baseline_floor: 1.0
+
+ban:
+  backoff_minutes: [10, 30, 120]
+
+dashboard:
+  host: "0.0.0.0"
+  port: 8080
+  refresh_seconds: 3
