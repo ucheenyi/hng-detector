@@ -158,7 +158,7 @@ hng-detector/
 ### Step 1 — SSH into your VM
 
 ```bash
-ssh azureuser@<YOUR_VM_PUBLIC_IP>
+ssh uche@<YOUR_VM_PUBLIC_IP>
 ```
 
 ---
@@ -167,7 +167,7 @@ ssh azureuser@<YOUR_VM_PUBLIC_IP>
 
 ```bash
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y docker.io docker-compose python3 python3-pip git iptables
+sudo apt install -y docker.io docker-compose python3 python3-full python3-venv git iptables
 sudo systemctl start docker
 sudo systemctl enable docker
 sudo usermod -aG docker $USER
@@ -198,12 +198,16 @@ cd ..
 
 ---
 
-### Step 5 — Install Python dependencies
+### Step 5 — Create virtual environment and install Python dependencies
 
 ```bash
-cd detector
-pip3 install -r requirements.txt
-cd ..
+cd ~/hng-detector
+
+# Create the venv (required on Ubuntu 22.04+ with Python 3.12)
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip install -r detector/requirements.txt
 ```
 
 ---
@@ -248,9 +252,9 @@ Requires=docker.service
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/home/azureuser/hng-detector/detector
+WorkingDirectory=/home/uche/hng-detector/detector
 Environment="SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/REAL/WEBHOOK"
-ExecStart=/usr/bin/python3 /home/azureuser/hng-detector/detector/main.py
+ExecStart=/home/uche/hng-detector/.venv/bin/python /home/uche/hng-detector/detector/main.py
 Restart=always
 RestartSec=5
 StandardOutput=journal
