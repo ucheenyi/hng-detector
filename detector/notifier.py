@@ -1,6 +1,17 @@
 # detector/notifier.py
 # Sends Slack webhook messages for ban, unban, and global anomaly events.
+#
+# WEBHOOK URL RESOLUTION ORDER (most secure first):
+#   1. SLACK_WEBHOOK_URL environment variable  ← preferred, never touches disk
+#   2. config.yaml slack.webhook_url           ← fallback
+#
+# On your VM, set it once and it persists across reboots:
+#   echo 'export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/XXX/YYY/ZZZ"' \
+#       >> ~/.bashrc && source ~/.bashrc
+# Or add it to the systemd service file under [Service]:
+#   Environment="SLACK_WEBHOOK_URL=https://hooks.slack.com/services/XXX/YYY/ZZZ"
 
+import os
 import requests
 import time
 import logging
@@ -10,11 +21,23 @@ log = logging.getLogger("notifier")
 
 class Notifier:
     def __init__(self, config):
-        self.webhook_url = config["slack"]["webhook_url"]
+        # Prefer environment variable — it never gets written to a file on disk
+        env_url    = os.environ.get("SLACK_WEBHOOK_URL", "").strip()
+        config_url = config.get("slack", {}).get("webhook_url", "").strip()
+
+        if env_url:
+            self.webhook_url = env_url
+            log.info("Slack webhook loaded from environment variable SLACK_WEBHOOK_URL")
+        elif config_url and not config_url.startswith("https://hooks.slack.com/services/REPLACE"):
+            self.webhook_url = config_url
+            log.info("Slack webhook loaded from config.yaml")
+        else:
+            self.webhook_url = ""
+            log.warning("No Slack webhook configured. Set SLACK_WEBHOOK_URL env var or update config.yaml.")
 
     def _send(self, text):
         """Post a message to the Slack webhook."""
-        if not self.webhook_url or self.webhook_url.startswith("https://hooks.slack.com/services/YOUR"):
+        if not self.webhook_url:
             log.warning("Slack webhook not configured. Skipping notification.")
             return
         try:
