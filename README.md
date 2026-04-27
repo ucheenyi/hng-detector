@@ -288,11 +288,11 @@ docker exec nginx tail -5 /var/log/nginx/hng-access.log
 # Dashboard is responding
 curl http://localhost:8080/api/metrics
 
-# Send test traffic to trigger a detection
+# From another Server or Local machine, Send test traffic to trigger a detection
 sudo apt install -y apache2-utils
 ab -n 5000 -c 50 http://localhost/
 
-# Check iptables for a blocked IP
+# Check iptables for a blocked IP inside the VM
 sudo iptables -L INPUT -n
 
 # Check audit log
