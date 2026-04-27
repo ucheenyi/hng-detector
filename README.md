@@ -8,13 +8,12 @@
 
 | | |
 |---|---|
-| **Server IP** | `<YOUR_VM_PUBLIC_IP>` |
-| **Nextcloud** | `http://<YOUR_VM_PUBLIC_IP>` (accessible by IP only) |
-| **Dashboard URL** | `https://dashboard.yourdomain.com` ← submit this for grading |
-| **GitHub Repo** | `https://github.com/yourusername/hng-detector` |
-| **Blog Post** | `https://dev.to/yourusername/building-a-ddos-detector` |
+| **Server IP** | `40.123.244.39` |
+| **Nextcloud** | `http://40.123.244.39` (accessible by IP only) |
+| **Dashboard URL** | `https://ucheenyi.mooo.com` ← submit this for grading |
+| **GitHub Repo** | `https://github.com/ucheenyi/hng-detector` |
+| **Blog Post** | `https://dev.to/uchemira/anomaly-detector-5601` |
 
-> ⚠️ Replace all placeholder values above with your real URLs before submitting.
 
 ---
 
