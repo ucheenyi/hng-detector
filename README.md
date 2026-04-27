@@ -10,7 +10,7 @@
 |---|---|
 | **Server IP** | `40.123.244.39` |
 | **Nextcloud** | `http://40.123.244.39` (accessible by IP only) |
-| **Dashboard URL** | `https://ucheenyi.mooo.com` ← submit this for grading |
+| **Dashboard URL** | `http://ucheenyi.mooo.com` ← submit this for grading |
 | **GitHub Repo** | `https://github.com/ucheenyi/hng-detector` |
 | **Blog Post** | `https://dev.to/uchemira/anomaly-detector-5601` |
 
