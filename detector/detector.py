@@ -28,9 +28,8 @@ class AnomalyDetector:
         self.tighten_factor = config["detection"]["error_surge_tighten_factor"]
 
         # Track when we last fired an alert to avoid spam (per IP)
-        self.last_alert = {} # ip -> timestamp self.cooldown = 120 # seconds between 
-        alerts for same IP
-
+        self.last_alert = {}   # ip -> timestamp
+        self.cooldown   = 120  # seconds between alerts for same IP
 
     def _is_error_surge(self, ip, error_rps):
         """True if this IP's error rate is 3x the baseline error rate."""
@@ -57,7 +56,7 @@ class AnomalyDetector:
             log.info(f"Error surge for {ip}: tightened thresholds z>{zscore_thresh}, rate>{rate_mult}x")
 
         # ── Per-IP anomaly check ──
-        ip_zscore = self.baseline.get_zscore(ip_rps)
+        ip_zscore  = self.baseline.get_zscore(ip_rps)
         ip_anomaly = (ip_zscore > zscore_thresh) or (ip_rps > mean * rate_mult)
 
         if ip_anomaly:
@@ -73,6 +72,7 @@ class AnomalyDetector:
         # ── Global anomaly check (Slack only, no IP ban) ──
         if now - self.last_alert.get("_global_", 0) < 60:
             return
+
         global_zscore  = self.baseline.get_zscore(global_rps)
         global_anomaly = (global_zscore > self.zscore_thresh) or (global_rps > mean * self.rate_mult)
 
